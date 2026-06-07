@@ -1,4 +1,17 @@
 import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+const markerIcon = new L.Icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 const MapPage = () => {
   const summaryCards = [
@@ -6,6 +19,37 @@ const MapPage = () => {
     { label: 'Moderate Risk Areas', value: '42', color: '#0288d1' },
     { label: 'High Risk Alerts', value: '9', color: '#01579b' },
   ];
+  const markers = [
+    {
+      name: 'Chennai',
+      position: [13.0827, 80.2707],
+      status: 'Good',
+      ph: '7.4',
+      tds: '180 mg/L',
+    },
+    {
+      name: 'Coimbatore',
+      position: [11.0168, 76.9558],
+      status: 'Moderate',
+      ph: '7.1',
+      tds: '260 mg/L',
+    },
+    {
+      name: 'Madurai',
+      position: [9.9252, 78.1198],
+      status: 'Fair',
+      ph: '7.0',
+      tds: '310 mg/L',
+    },
+    {
+      name: 'Trichy',
+      position: [10.7905, 78.7047],
+      status: 'Good',
+      ph: '7.3',
+      tds: '190 mg/L',
+    },
+  ];
+  const mapCenter = [11.1271, 78.6569];
 
   const updates = [
     'Groundwater sampling completed in Chennai district.',
@@ -41,7 +85,22 @@ const MapPage = () => {
             <span style={styles.mapStatus}>Live overview</span>
           </div>
           <div style={styles.mapPlaceholder}>
-            <p style={styles.mapPlaceholderText}>Map placeholder for Tamil Nadu water quality zones</p>
+            <MapContainer center={mapCenter} zoom={7} scrollWheelZoom={false} style={styles.mapContainer}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {markers.map((marker) => (
+                <Marker key={marker.name} position={marker.position} icon={markerIcon}>
+                  <Popup>
+                    <strong>{marker.name}</strong>
+                    <div style={styles.popupText}>Water Quality Status: {marker.status}</div>
+                    <div style={styles.popupText}>pH Value: {marker.ph}</div>
+                    <div style={styles.popupText}>TDS Value: {marker.tds}</div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
           </div>
         </section>
 
@@ -190,6 +249,11 @@ const styles = {
     maxWidth: '420px',
     lineHeight: 1.6,
   },
+  mapContainer: {
+  height: '500px',
+  width: '100%',
+  borderRadius: '16px',
+},
   sidebar: {
     display: 'flex',
     flexDirection: 'column',
@@ -250,3 +314,46 @@ const styles = {
 };
 
 export default MapPage;
+
+/*
+Upgrade this page into an interactive AquaGuard AI water monitoring dashboard.
+
+Requirements:
+
+Keep all existing sections.
+
+Add React Leaflet map integration.
+
+Use:
+- MapContainer
+- TileLayer
+- Marker
+- Popup
+
+Center map on Tamil Nadu.
+
+Add sample markers:
+
+Chennai
+Coimbatore
+Madurai
+Trichy
+
+Each marker popup should show:
+
+Location Name
+Water Quality Status
+pH Value
+TDS Value
+
+Use realistic sample values.
+
+Map height:
+500px
+
+Theme:
+Blue and aqua
+
+Do not remove existing dashboard cards.
+
+Export default component.*/
